@@ -37,6 +37,11 @@ namespace chess_proof_of_concept
             has_piece = true;
             this.piece = piece;
         }
+        public void removePiece()
+        {
+            has_piece = false;
+            piece = null;
+        }
     }
     //TODO should pieces know their coordinates?
     abstract class Piece
@@ -59,8 +64,9 @@ namespace chess_proof_of_concept
     }
     class Chessboard
     {
-        Square[,] board = new Square[8,8];
+        private Square[,] board = new Square[8,8];
         //TODO on start there should be all of the pieces present, both white and black
+        //TODO the x and y coords are swapped i think
         public Chessboard()
         {
             for (int j = 0; j < 8; j++)
@@ -68,21 +74,22 @@ namespace chess_proof_of_concept
                 for (int i = 0; i < 8; i++)
                 {
                     Square empty_square = new Square();
-                    board[i, j] = empty_square;
+                    board[i,j] = empty_square;
                 }
             }
             for (int i = 0; i < 8; i++)
             {
-                Piece p = new Pawn("b");
-                board[1, i].changePiece(p);
+                Piece p = new Pawn("w");
+                board[1,i].changePiece(p);
             }
             for (int i = 0; i < 8; i++)
             {
-                Piece p = new Pawn("w");
-                board[6, i].changePiece(p);
+                Piece p = new Pawn("b");
+                board[6,i].changePiece(p);
             }
 
         }
+        //TODO invert the display of the chessboard so the indexing makes sense
         public void drawChessboard()
         {
             int n = 1;
@@ -111,6 +118,7 @@ namespace chess_proof_of_concept
                 }
                 n++;
             }
+            Console.WriteLine();
         }
         Piece getPiece(int x, int y)
         {
@@ -119,6 +127,11 @@ namespace chess_proof_of_concept
         public void movePiece(int x, int y, int target_x, int target_y)
         {
             Piece p = getPiece(x,y);
+            //if (getPiece(target_x,target_y) == null)
+            {
+                board[x, y].removePiece();
+                board[target_x, target_y].changePiece(p);
+            }
         }
     }
     internal class Program
@@ -126,8 +139,10 @@ namespace chess_proof_of_concept
         static void Main(string[] args)
         {
             Chessboard chessboard1 = new Chessboard();
+            
             chessboard1.drawChessboard();
-
+            chessboard1.movePiece(6, 2, 4, 2);
+            chessboard1.drawChessboard();
         }
     }
 }
