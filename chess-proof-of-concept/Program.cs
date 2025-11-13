@@ -79,51 +79,66 @@ namespace chess_proof_of_concept
             }
             for (int i = 0; i < 8; i++)
             {
-                Piece p = new Pawn("w");
-                board[1,i].changePiece(p);
+                Piece p = new Pawn("b");
+                board[i,1].changePiece(p);
             }
             for (int i = 0; i < 8; i++)
             {
-                Piece p = new Pawn("b");
-                board[6,i].changePiece(p);
+                Piece p = new Pawn("w");
+                board[i,6].changePiece(p);
             }
 
         }
-        //TODO invert the display of the chessboard so the indexing makes sense
         public void drawChessboard()
         {
-            int n = 1;
             int line_len = 0;
-            Console.Write("| ");
-            foreach (Square square in board)
+            int k = 7;
+            Console.Write("8| ");
+            for(int i = 0;i < 8;i++)
             {
-                string piece = "  ";
-                if (square.getPiece() != null)
+                for (int j = 0; j < 8; j++)
                 {
-                    piece = square.getPiece().getSymbol();
-                }
-                line_len += piece.Length + 3;
-                Console.Write(piece + " | ");
-                if (n == 8)
-                {
-                    string line = "\n";
-                    for (int i = 0; i <= line_len; i++)
+                    string piece = "  ";
+                    if (board[j,i].getPiece() != null)
                     {
-                        line = line + "-";
+                        piece = board[j,i].getPiece().getSymbol();
                     }
-                    Console.WriteLine(line);
-                    Console.Write("| ");
-                    n = 0;
-                    line_len = 0;
+                    line_len += piece.Length + 3;
+                    Console.Write(piece + " | ");
                 }
-                n++;
+                string line = "\n";
+                for (int j = 0; j <= line_len; j++)
+                {
+                    line = line + "-";
+                }
+                Console.WriteLine(line);
+                if(k < 1) break;
+                Console.Write("{0}| ", k);
+                k--;
+                line_len = 0;
             }
+
+            Console.Write(" | ");
+            string letters = "abcdefgh";
+            for (int j = 0; j < 8; j++)
+            {
+                char letter = letters[j];
+                line_len += 5;
+                Console.Write(" {0} | ",letter);
+            }
+            string line1 = "\n";
+            for (int j = 0; j <= line_len; j++)
+            {
+                line1 = line1 + "-";
+            }
+            Console.WriteLine();
             Console.WriteLine();
         }
         Piece getPiece(int x, int y)
         {
             return board[x, y].getPiece();
         }
+        //TODO parse chess notation (string), like Pe4 ect.
         public void movePiece(int x, int y, int target_x, int target_y)
         {
             Piece p = getPiece(x,y);
